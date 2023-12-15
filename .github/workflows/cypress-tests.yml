@@ -1,0 +1,47 @@
+name: Cypress Tests
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        containers:
+          - cypress/browsers:node-20.6.1-chrome-116.0.5845.187-1-ff-117.0-edge-116.0.1938.76-1
+    container: ${{ matrix.containers }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+
+    - name: Install Dependencies
+      run: npm install
+
+    - name: Run Cypress Tests
+      run: npx cypress run --browser firefox
+      env:
+        CYPRESS_RECORD_KEY: ${{ secrets.RECORD_KEY }}
+
+    - name: Upload Test Report Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: cypress-reports
+        path: cypress/reports
+
+  artifacts-download:
+    needs: cypress-run
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download Artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: cypress-reports
