@@ -27,8 +27,8 @@ let token;
 
 
 export function login() {
-    signUp().then(({ username, password }) => {
-      cy.request({
+    return signUp().then(({ username, password }) => {
+      return cy.request({
         method: "POST",
         url: "https://bookcart.azurewebsites.net/api/login",
         body: {
