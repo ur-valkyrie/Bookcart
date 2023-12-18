@@ -9,6 +9,11 @@ module.exports = defineConfig({
       snapshotOnly: true
     }
   },
+  screenshotsFolder: 'cypress/screenshots',
+  videosFolder: 'cypress/videos',
+  reporterOptions: {
+    reportDir: 'cypress/reports'
+  },
   reporter: 'mochawesome',
   reporterOptions: {
     reportDir: 'cypress/results',
